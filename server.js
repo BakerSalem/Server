@@ -80,22 +80,34 @@ io.on("connection", (socket) => {
 
 });
 
+// function getLocalIP() {
+//     const interfaces = os.networkInterfaces();
+//     for (const name in interfaces) {
+//         for (const net of interfaces[name]) {
+//             if (net.family === 'IPv4' && !net.internal) {
+//                 return net.address;
+//             }
+//         }
+//     }
+//     return 'Not found';
+// }
+
 function getLocalIP() {
     const interfaces = os.networkInterfaces();
     for (const name in interfaces) {
         for (const net of interfaces[name]) {
-            if (net.family === 'IPv4' && !net.internal) {
+            if (net.family === 'IPv4' && !net.internal && net.address === "10.8.8.94") {
                 return net.address;
             }
         }
     }
-    return 'Not found';
+    return null; // Return null if the address is not found
 }
+
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
     console.log("Local IP:", getLocalIP());
-
     console.log(`Server running on http://localhost:${PORT}`);
     
 });
