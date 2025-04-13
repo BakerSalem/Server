@@ -61,16 +61,10 @@ io.on("connection", (socket) => {
         socket.emit("cardFlip", data); // Send to me
     });
     
-    socket.on("showAllCards", () => {
+    socket.on("flipAllCards", () => {
         console.log("Show All Cards");
-        socket.broadcast.emit("showAllCards");
-        socket.emit("showAllCards");
-    });
-
-    socket.on("hideAllCards", () => {
-        console.log("Hide All Cards");
-        socket.broadcast.emit("hideAllCards");
-        socket.emit("hideAllCards");
+        socket.broadcast.emit("flipAllCards");
+        socket.emit("flipAllCards");
     });
 
     socket.on("finishSession", () => {
