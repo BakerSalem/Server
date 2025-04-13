@@ -80,30 +80,17 @@ io.on("connection", (socket) => {
 
 });
 
-// function getLocalIP() {
-//     const interfaces = os.networkInterfaces();
-//     for (const name in interfaces) {
-//         for (const net of interfaces[name]) {
-//             if (net.family === 'IPv4' && !net.internal) {
-//                 return net.address;
-//             }
-//         }
-//     }
-//     return 'Not found';
-// }
-
 function getLocalIP() {
     const interfaces = os.networkInterfaces();
     for (const name in interfaces) {
         for (const net of interfaces[name]) {
-            if (net.family === 'IPv4' && !net.internal && net.address === "10.8.8.94") {
+            if (net.family === 'IPv4' && !net.internal) {
                 return net.address;
             }
         }
     }
-    return null; // Return null if the address is not found
+    return 'Not found';
 }
-
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
