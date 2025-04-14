@@ -12,14 +12,14 @@ io.on("connection", (socket) => {
     console.log(`Client connected: ${socket.id}`);
 
     socket.on("appSelect", (data) => {
-        console.log("appSelect "+data.ID);
+        console.log("appSelect " + data.ID);
         socket.broadcast.emit("appSelect", data); // Send to others
     });
 
     socket.on("cameraUpdate", (data) => {
         socket.broadcast.emit("cameraUpdate", data); // Send to others
     });
-    
+
     socket.on("startPandol", () => {
         console.log("startPandol");
         socket.broadcast.emit("startPandol"); // Send to others
@@ -55,12 +55,24 @@ io.on("connection", (socket) => {
         socket.emit("carRestart"); // Send to me
     });
 
+    socket.on("startVoice", () => {
+        console.log("startVoice");
+        socket.broadcast.emit("startVoice"); // Send to others
+        socket.emit("startVoice"); // Send to me
+    });
+
+    socket.on("stopVoice", () => {
+        console.log("stopVoice");
+        socket.broadcast.emit("stopVoice"); // Send to others
+        socket.emit("stopVoice"); // Send to me
+    });
+
     socket.on("cardFlip", (data) => {
-        console.log("cardFlip: ",data.ID);
+        console.log("cardFlip: ", data.ID);
         socket.broadcast.emit("cardFlip", data); // Send to others
         socket.emit("cardFlip", data); // Send to me
     });
-    
+
     socket.on("flipAllCards", () => {
         console.log("Show All Cards");
         socket.broadcast.emit("flipAllCards");
@@ -91,5 +103,5 @@ server.listen(PORT, () => {
     console.log("Local IP:", getLocalIP());
 
     console.log(`Server running on http://localhost:${PORT}`);
-    
+
 });
