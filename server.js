@@ -20,6 +20,10 @@ io.on("connection", (socket) => {
         socket.broadcast.emit("cameraUpdate", data); // Send to others
     });
 
+    socket.on("handUpdate", (data) => {
+        socket.broadcast.emit("handUpdate", data); // Send to others
+    });
+    
     socket.on("startPandol", () => {
         console.log("startPandol");
         socket.broadcast.emit("startPandol"); // Send to others
