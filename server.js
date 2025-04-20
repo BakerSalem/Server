@@ -23,7 +23,11 @@ io.on("connection", (socket) => {
     socket.on("handUpdate", (data) => {
         socket.broadcast.emit("handUpdate", data); // Send to others
     });
-    
+
+    socket.on("handObjectToggle", (data) => {
+        socket.broadcast.emit("handObjectToggle", data);
+    });
+
     socket.on("startPandol", () => {
         console.log("startPandol");
         socket.broadcast.emit("startPandol"); // Send to others
