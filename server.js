@@ -1,115 +1,49 @@
 const http = require('http');
 const socketIo = require('socket.io');
-const expressApp = require('./app'); // ملف إعدادات Express
-const os = require('os');
+const expressApp = require('./app');
 
-// إعداد Express
+const getLocalIP = require('./utils/getLocalIP');
+
+// Import Socket.IO controllers
+const ApplicationController = require('./controllers/ApplicationController')
+const AdminController = require('./controllers/adminController');
+const CameraController = require('./controllers/CameraController');
+const CarController = require('./controllers/carController');
+const CardController = require('./controllers/cardController');
+const HandController = require('./controllers/handController');
+const VoiceController = require('./controllers/voiceController');
+
+
+
 const app = expressApp();
 const server = http.createServer(app);
 const io = socketIo(server);
 
+const applicationController = new ApplicationController(io);
+const adminController = new AdminController(io);
+const cameraController = new CameraController(io);
+const carController = new CarController(io);
+const cardController = new CardController(io);
+const handController = new HandController(io);
+const voiceController = new VoiceController(io);
+
+// Socket.IO connection logic
 io.on("connection", (socket) => {
     console.log(`Client connected: ${socket.id}`);
 
-    socket.on("appSelect", (data) => {
-        console.log("appSelect " + data.ID);
-        socket.broadcast.emit("appSelect", data); // Send to others
-    });
-
-    socket.on("cameraUpdate", (data) => {
-        socket.broadcast.emit("cameraUpdate", data); // Send to others
-    });
-
-    socket.on("handUpdate", (data) => {
-        socket.broadcast.emit("handUpdate", data); // Send to others
-    });
-
-    socket.on("handObjectToggle", (data) => {
-        socket.broadcast.emit("handObjectToggle", data);
-    });
-
-    socket.on("startPandol", () => {
-        console.log("startPandol");
-        socket.broadcast.emit("startPandol"); // Send to others
-        socket.emit("startPandol"); // Send to me
-    });
-    socket.on("stopPandol", () => {
-        console.log("stopPandol");
-        socket.broadcast.emit("stopPandol"); // Send to others
-        socket.emit("stopPandol"); // Send to me
-    });
-
-    socket.on("carSpeed", (data) => {
-        console.log("carSpeed");
-        socket.broadcast.emit("carSpeed", data); // Send to others
-        socket.emit("carSpeed", data); // Send to me
-    });
-
-    socket.on("carStart", () => {
-        console.log("carStart");
-        socket.broadcast.emit("carStart"); // Send to others
-        socket.emit("carStart"); // Send to me
-    });
-
-    socket.on("carStop", () => {
-        console.log("carStop");
-        socket.broadcast.emit("carStop"); // Send to others
-        socket.emit("carStop");
-    });
-
-    socket.on("carRestart", () => {
-        console.log("carRestart");
-        socket.broadcast.emit("carRestart"); // Send to others
-        socket.emit("carRestart"); // Send to me
-    });
-
-    socket.on("startVoice", () => {
-        console.log("startVoice");
-        socket.broadcast.emit("startVoice"); // Send to others
-        socket.emit("startVoice"); // Send to me
-    });
-
-    socket.on("stopVoice", () => {
-        console.log("stopVoice");
-        socket.broadcast.emit("stopVoice"); // Send to others
-        socket.emit("stopVoice"); // Send to me
-    });
-
-    socket.on("cardFlip", (data) => {
-        console.log("cardFlip: ", data.ID);
-        socket.broadcast.emit("cardFlip", data); // Send to others
-        socket.emit("cardFlip", data); // Send to me
-    });
-
-    socket.on("flipAllCards", () => {
-        console.log("Show All Cards");
-        socket.broadcast.emit("flipAllCards");
-        socket.emit("flipAllCards");
-    });
-
-    socket.on("finishSession", () => {
-        console.log("Hide All Cards");
-        socket.broadcast.emit("finishSession"); // Send to others
-    });
-
+    applicationController.handleConnection(socket);
+    adminController.handleConnection(socket);
+    cameraController.handleConnection(socket);
+    carController.handleConnection(socket);
+    cardController.handleConnection(socket);
+    handController.handleConnection(socket);
+    voiceController.handleConnection(socket);
 });
 
-function getLocalIP() {
-    const interfaces = os.networkInterfaces();
-    for (const name in interfaces) {
-        for (const net of interfaces[name]) {
-            if (net.family === 'IPv4' && !net.internal) {
-                return net.address;
-            }
-        }
-    }
-    return 'Not found';
-}
 
+// Start the server
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
     console.log("Local IP:", getLocalIP());
-
-    console.log(`Server running on http://localhost:${PORT}`);
-
+    console.log(`Server running at http://localhost:${PORT}`);
 });
