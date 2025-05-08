@@ -12,6 +12,9 @@ const CarController = require('./controllers/carController');
 const CardController = require('./controllers/cardController');
 const HandController = require('./controllers/handController');
 const VoiceController = require('./controllers/voiceController');
+const MarkerController = require('./controllers/MarkerController');
+const EraserController = require('./controllers/EraserController');
+const ModeRoomController = require('./controllers/ModeRoomController');
 
 
 
@@ -26,6 +29,9 @@ const carController = new CarController(io);
 const cardController = new CardController(io);
 const handController = new HandController(io);
 const voiceController = new VoiceController(io);
+const markerController = new MarkerController(io);
+const eraserController = new EraserController(io);
+const modeRoomController = new ModeRoomController(io);
 
 // Socket.IO connection logic
 io.on("connection", (socket) => {
@@ -38,6 +44,9 @@ io.on("connection", (socket) => {
     cardController.handleConnection(socket);
     handController.handleConnection(socket);
     voiceController.handleConnection(socket);
+    markerController.handleConnection(socket);
+    eraserController.handleConnection(socket);
+    modeRoomController.handleConnection(socket);
 });
 
 

@@ -24,6 +24,7 @@ class AdminController {
             console.log("Hide All Cards");
             socket.broadcast.emit("finishSession");
         });
+
     }
 }
 
